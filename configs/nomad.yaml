@@ -1,0 +1,32 @@
+services:
+  api_host: "localhost"
+  api_base_path: "/nomad-oasis"
+
+oasis:
+  is_oasis: true
+  uses_central_user_management: true
+
+plugins:
+  entry_points:
+    options:
+      nomad_north_jupyter.north_tools.jupyter_north_tool:north_tool_entry_point:
+        north_tool:
+          image: ghcr.io/fairmat-nfdi/nomad-north-jupyter:latest
+
+meta:
+  deployment: "oasis"
+  deployment_url: "https://my-oasis.org/api"
+  maintainer_email: "me@my-oasis.org"
+
+logstash:
+  enabled: false
+
+temporal:
+  enabled: true
+
+mongo:
+  db_name: nomad_oasis_v1
+
+elastic:
+  entries_index: nomad_oasis_entries_v1
+  materials_index: nomad_oasis_materials_v1
