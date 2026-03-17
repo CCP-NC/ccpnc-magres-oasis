@@ -24,7 +24,7 @@ dependencies = ["nomad-lab[infrastructure]>=1.4.1"]
 
 
 [project.urls]
-repository = "https://github.com/FAIRmat-NFDI/nomad-distro-template"
+repository = "https://github.com/ccp-nc/ccpnc-magres-oasis"
 
 [project.optional-dependencies]
 # Add your plugins to the list below.
