@@ -143,6 +143,11 @@ RUN mkdir -p /app/.volumes/fs \
  && mkdir nomad \
  && cp /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/jupyterhub_config.py nomad/
 
+# Copy modified files to the docker image
+COPY nomad_lab_patch/dev.py /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/cli/dev.py
+COPY nomad_lab_patch/ui.py /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/config/models/ui.py
+COPY nomad_lab_patch/default_en.txt /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/units/default_en.txt
+
 
 USER nomad
 

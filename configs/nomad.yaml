@@ -4,14 +4,14 @@ services:
 
 oasis:
   is_oasis: true
-  uses_central_user_management: true
+  uses_central_user_management: false
 
-plugins:
-  entry_points:
-    options:
-      nomad_north_jupyter.north_tools.jupyter_north_tool:north_tool_entry_point:
-        north_tool:
-          image: ghcr.io/ccp-nc/ccpnc-magres-oasis/jupyter:main
+keycloak:
+  server_url: 'http://keycloak:8080/auth/'
+  public_server_url: 'http://localhost/keycloak/auth/'
+  realm_name: nomad
+  username: 'admin'
+  password: 'password'
 
 meta:
   deployment: "oasis"
@@ -30,3 +30,41 @@ mongo:
 elastic:
   entries_index: nomad_oasis_entries_v1
   materials_index: nomad_oasis_materials_v1
+
+plugins:
+  entry_points:
+    exclude: 
+      - "electronicparsers:magres_parser_entry_point"
+      - "nomad_parser_magres.parsers:magres_parser"
+      - "apps/1_all/1_entries"
+      - "apps/2_theory/1_calculations"
+      - "apps/2_theory/2_materials"
+      - "apps/3_experiment/1_eln"
+      - "apps/3_experiment/2_eels"
+      - "pynxtools.nomad.entrypoints:nexus_app"
+      - "pynxtools_mpes.nomad.entrypoints:mpes_app"
+      - "pynxtools_raman.nomad:raman_app"
+      - "pynxtools.nomad.entrypoints:simple_nexus_example"
+      - "pynxtools_apm.nomad.entrypoints:apm_example"
+      - "pynxtools_ellips.nomad.entrypoints:ellips_example"
+      - "pynxtools_mpes.nomad.entrypoints:mpes_example"
+      - "pynxtools_xps.nomad.entrypoints:xps_example"
+      - "pynxtools.nomad.entrypoints:nexus_data_converter"
+      - "pynxtools.nomad.entrypoints:nexus_schema"
+      - "runschema:run_schema_entry_point"
+    options:
+      nomad_north_jupyter.north_tools.jupyter_north_tool:north_tool_entry_point:
+        north_tool:
+          image: ghcr.io/sathya-s3/nomad-distro-template-test3/jupyter:main
+
+ui:
+  unit_systems:
+    options:
+      AU:
+        units:
+          electric_field_gradient:
+            definition: "atomic_unit_of_electric_field_gradient"
+      Custom:
+        units:
+          electric_field_gradient:
+            definition: "atomic_unit_of_electric_field_gradient"
