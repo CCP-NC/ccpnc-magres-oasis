@@ -27,7 +27,7 @@ dependencies = [
   "nomad-parser-plugins-electronic>=1.0",
   "nomad-parser-plugins-atomistic>=1.0.6",
   "ccpnc-oasis-app @ git+https://github.com/CCP-NC/ccpnc-oasis-app.git@5a5cdbe6f281f18bd609a0c7f653b02dfde78704",
-  "nomad-oasis-schema-parser-plugin @ git+https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git@a65b9093e273ffb973039c9e6b386d48258835e6",
+  "nomad-oasis-schema-parser-plugin @ git+https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git@b7fbed049733774f86e25006d72a4a498371c084",
 ]
 
 
@@ -52,7 +52,7 @@ extra-index-url = [
 prerelease = "explicit"
 constraint-dependencies = ["flatdict>=4.1.0"]
 override-dependencies = [
-  "nomad-nmr-schema @ git+https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git@d10df31538acbf824affe0e0635407602b9df490",
+  "nomad-nmr-schema @ git+https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git@850e594579df2a1eaf1e8ab84b1bac91b31e5148",
   # Fetch a specific nomad-simulations version
   "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@46ed5a5d0632eac22267c9d38e9a4c66f43a5b38"
 ]
