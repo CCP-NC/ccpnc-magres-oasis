@@ -16,7 +16,7 @@ prerelease-mode = "explicit"
 [manifest]
 constraints = [{ name = "flatdict", specifier = ">=4.1.0" }]
 overrides = [
-    { name = "nomad-nmr-schema", git = "https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git?rev=d10df31538acbf824affe0e0635407602b9df490" },
+    { name = "nomad-nmr-schema", git = "https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git?rev=850e594579df2a1eaf1e8ab84b1bac91b31e5148" },
     { name = "nomad-simulations", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=46ed5a5d0632eac22267c9d38e9a4c66f43a5b38" },
 ]
 
@@ -2511,7 +2511,7 @@ requires-dist = [
     { name = "nomad-lab", extras = ["infrastructure"], specifier = ">=1.4.1" },
     { name = "nomad-normalizer-plugin-system", specifier = ">=1.0" },
     { name = "nomad-north-jupyter", marker = "extra == 'plugins'", specifier = ">=0.2.1" },
-    { name = "nomad-oasis-schema-parser-plugin", git = "https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git?rev=a65b9093e273ffb973039c9e6b386d48258835e6" },
+    { name = "nomad-oasis-schema-parser-plugin", git = "https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git?rev=b7fbed049733774f86e25006d72a4a498371c084" },
     { name = "nomad-parser-plugins-atomistic", specifier = ">=1.0.6" },
     { name = "nomad-parser-plugins-electronic", specifier = ">=1.0" },
     { name = "nomad-schema-plugin-run", specifier = ">=1.0.1" },
@@ -2610,7 +2610,7 @@ infrastructure = [
 [[package]]
 name = "nomad-nmr-schema"
 version = "0.1.0"
-source = { git = "https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git?rev=d10df31538acbf824affe0e0635407602b9df490#d10df31538acbf824affe0e0635407602b9df490" }
+source = { git = "https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git?rev=850e594579df2a1eaf1e8ab84b1bac91b31e5148#850e594579df2a1eaf1e8ab84b1bac91b31e5148" }
 dependencies = [
     { name = "nomad-lab" },
     { name = "nomad-simulations" },
@@ -2644,7 +2644,7 @@ wheels = [
 [[package]]
 name = "nomad-oasis-schema-parser-plugin"
 version = "0.1.0"
-source = { git = "https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git?rev=a65b9093e273ffb973039c9e6b386d48258835e6#a65b9093e273ffb973039c9e6b386d48258835e6" }
+source = { git = "https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git?rev=b7fbed049733774f86e25006d72a4a498371c084#b7fbed049733774f86e25006d72a4a498371c084" }
 dependencies = [
     { name = "nomad-lab" },
     { name = "nomad-nmr-schema" },
@@ -2657,8 +2657,8 @@ dependencies = [
 
 [[package]]
 name = "nomad-parser-magres"
-version = "0.1.dev141+g68896a602"
-source = { git = "https://github.com/FAIRmat-NFDI/nomad-parser-magres.git?rev=68896a60265ca2e01d7f07c25a520da3df978022#68896a60265ca2e01d7f07c25a520da3df978022" }
+version = "0.1.dev142+g1b127cdcf"
+source = { git = "https://github.com/FAIRmat-NFDI/nomad-parser-magres.git?rev=1b127cdcf1d4418b1671c8e3a285144ed2a7f58b#1b127cdcf1d4418b1671c8e3a285144ed2a7f58b" }
 dependencies = [
     { name = "nomad-lab" },
     { name = "nomad-nmr-schema" },
