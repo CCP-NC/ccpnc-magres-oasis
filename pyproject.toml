@@ -28,6 +28,7 @@ dependencies = [
   "nomad-parser-plugins-atomistic>=1.0.6",
   "ccpnc-oasis-app @ git+https://github.com/CCP-NC/ccpnc-oasis-app.git@v0.2.2",
   "nomad-oasis-schema-parser-plugin @ git+https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git@v1.0.1",
+  "mongomock",  # required by optimade in development/test mode; not pulled transitively with overridden optimade version
 ]
 
 
@@ -54,7 +55,12 @@ prerelease = "explicit"
 constraint-dependencies = ["flatdict>=4.1.0"]
 override-dependencies = [
   "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@v0.7.0",
-  "optimade>=1.5.0",  # 1.2.4 used plain Starlette Router, incompatible with fastapi>=0.115.7; 1.5.0 uses APIRouter
+  # optimade 1.3.1 is the last version with the API nomad expects (APIRouter + ENTRY_COLLECTIONS
+  # in routers/__init__ + no get_logger). 1.4.0+ restructured these APIs incompatibly.
+  "optimade==1.3.1",
+  # optimade 1.3.1 declares starlette~=0.38, but nomad-lab (pre-release) requires starlette>=1.0.
+  # Override to allow starlette 1.x; optimade 1.3.1 only uses stable starlette APIs so this is safe.
+  "starlette>=1.0",
 ]
 
 [tool.setuptools.packages.find]

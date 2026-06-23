@@ -143,28 +143,6 @@ RUN mkdir -p /app/.volumes/fs \
  && mkdir nomad \
  && cp /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/jupyterhub_config.py nomad/
 
-# Patch nomad's optimade_logger to expose symbols added in optimade >= 1.4.0
-# (nomad patches sys.modules['optimade.server.logger'] with this file, but the
-# installed version only provides LOGGER; optimade >= 1.4.0 also imports
-# get_logger, create_logger, and set_logging_context from it)
-RUN tee -a /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/app/optimade_logger.py > /dev/null << 'PYEOF'
-
-import logging as _logging
-from contextvars import ContextVar as _ContextVar
-_current_log_tag = _ContextVar("current_log_tag", default=None)
-
-def set_logging_context(tag):
-    _current_log_tag.set(tag)
-
-def get_logger():
-    tag = _current_log_tag.get()
-    return _logging.getLogger("optimade" + ("." + tag if tag else ""))
-
-def create_logger(tag=None, config=None):
-    logger_name = "optimade" + ("." + tag if tag else "")
-    return _logging.getLogger(logger_name)
-PYEOF
-
 
 USER nomad
 
