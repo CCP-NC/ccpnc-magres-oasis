@@ -21,13 +21,13 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 dependencies = [
-  "nomad-lab[infrastructure]>=1.4.1",
+  "nomad-lab[infrastructure]>=1.4.2",
   "nomad-schema-plugin-run>=1.0.1",
   "nomad-normalizer-plugin-system>=1.0",
   "nomad-parser-plugins-electronic>=1.0",
   "nomad-parser-plugins-atomistic>=1.0.6",
-  "ccpnc-oasis-app @ git+https://github.com/CCP-NC/ccpnc-oasis-app.git@5a5cdbe6f281f18bd609a0c7f653b02dfde78704",
-  "nomad-oasis-schema-parser-plugin @ git+https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git@b7fbed049733774f86e25006d72a4a498371c084",
+  "ccpnc-oasis-app @ git+https://github.com/CCP-NC/ccpnc-oasis-app.git@v0.2.2",
+  "nomad-oasis-schema-parser-plugin @ git+https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git@v1.0.1",
 ]
 
 
@@ -38,6 +38,7 @@ repository = "https://github.com/ccp-nc/ccpnc-magres-oasis"
 # Add your plugins to the list below.
 plugins = [
  "nomad-north-jupyter>=0.2.1"
+ "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@develop"
   ]
 jupyter = ["jupyter-events"]
 gpu-action = []
@@ -52,9 +53,7 @@ extra-index-url = [
 prerelease = "explicit"
 constraint-dependencies = ["flatdict>=4.1.0"]
 override-dependencies = [
-  "nomad-nmr-schema @ git+https://github.com/FAIRmat-NFDI/nomad-schema-plugin-nmr.git@850e594579df2a1eaf1e8ab84b1bac91b31e5148",
-  # Fetch a specific nomad-simulations version
-  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@46ed5a5d0632eac22267c9d38e9a4c66f43a5b38"
+  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@v0.7.0"
 ]
 
 [tool.setuptools.packages.find]
