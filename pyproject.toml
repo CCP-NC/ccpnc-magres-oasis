@@ -53,7 +53,8 @@ extra-index-url = [
 prerelease = "explicit"
 constraint-dependencies = ["flatdict>=4.1.0"]
 override-dependencies = [
-  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@v0.7.0"
+  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@v0.7.0",
+  "optimade>=1.5.0",  # 1.2.4 used plain Starlette Router, incompatible with fastapi>=0.115.7; 1.5.0 uses APIRouter
 ]
 
 [tool.setuptools.packages.find]
