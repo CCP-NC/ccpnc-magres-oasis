@@ -1070,8 +1070,8 @@
       "firstBrokerLoginFlowAlias": "first broker login",
       "config": {
         "clientId": "",
-        "tokenUrl": "https://sandbox.orcid.org/oauth/token",
-        "authorizationUrl": "https://sandbox.orcid.org/oauth/authorize",
+        "tokenUrl": "https://orcid.org/oauth/token",
+        "authorizationUrl": "https://orcid.org/oauth/authorize",
         "clientAuthMethod": "client_secret_basic",
         "syncMode": "IMPORT",
         "clientSecret": "",
