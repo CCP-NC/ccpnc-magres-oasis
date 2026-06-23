@@ -37,7 +37,7 @@ repository = "https://github.com/ccp-nc/ccpnc-magres-oasis"
 [project.optional-dependencies]
 # Add your plugins to the list below.
 plugins = [
- "nomad-north-jupyter>=0.2.1"
+ "nomad-north-jupyter>=0.2.1",
  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@develop"
   ]
 jupyter = ["jupyter-events"]
