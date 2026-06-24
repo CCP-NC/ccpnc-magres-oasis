@@ -28,7 +28,7 @@ dependencies = [
   "nomad-parser-plugins-atomistic>=1.0.6",
   "ccpnc-oasis-app @ git+https://github.com/CCP-NC/ccpnc-oasis-app.git@v0.2.2",
   "nomad-oasis-schema-parser-plugin @ git+https://github.com/CCP-NC/nomad-oasis-schema-parser-plugin.git@v1.0.1",
-  "mongomock",  # required by optimade in development/test mode; not pulled transitively with overridden optimade version
+  "mongomock",  # pulled transitively via optimade[mongo] but listed explicitly for clarity
 ]
 
 
