@@ -143,10 +143,16 @@ RUN mkdir -p /app/.volumes/fs \
  && mkdir nomad \
  && cp /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/jupyterhub_config.py nomad/
 
-# Copy modified files to the docker image
-COPY nomad_lab_patch/dev.py /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/cli/dev.py
-COPY nomad_lab_patch/ui.py /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/config/models/ui.py
-COPY nomad_lab_patch/default_en.txt /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/units/default_en.txt
+# fastapi 0.138+ added a _contains_router() assertion inside include_router(). optimade 1.2.4
+# uses a plain starlette.routing.Router for its landing page (not a FastAPI APIRouter), so
+# it lacks _contains_router and the assertion fails. Nomad's optimade/__init__.py already
+# patches StarletteRouter for on_startup/on_shutdown; add _contains_router there too.
+# Returning False is always correct: the landing Router never contains the app router.
+RUN set -e \
+ && sed -i \
+    "s/setattr(StarletteRouter, 'on_shutdown', \[\])/&\nif not hasattr(StarletteRouter, '_contains_router'):\n    StarletteRouter._contains_router = lambda self, router, seen=None: False/" \
+    "/opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/app/optimade/__init__.py" \
+ && grep -q "_contains_router" "/opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/app/optimade/__init__.py"
 
 
 USER nomad
