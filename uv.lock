@@ -2680,7 +2680,7 @@ requires-dist = [
     { name = "nomad-parser-plugins-atomistic", specifier = ">=1.0.6" },
     { name = "nomad-parser-plugins-electronic", specifier = ">=1.0" },
     { name = "nomad-schema-plugin-run", specifier = ">=1.0.1" },
-    { name = "nomad-simulations", marker = "extra == 'plugins'", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=develop" },
+    { name = "nomad-simulations", marker = "extra == 'plugins'", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=v0.7.0" },
 ]
 provides-extras = ["plugins", "jupyter", "gpu-action", "cpu-action", "dev"]
 
