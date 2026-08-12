@@ -39,7 +39,7 @@ repository = "https://github.com/ccp-nc/ccpnc-magres-oasis"
 # Add your plugins to the list below.
 plugins = [
  "nomad-north-jupyter>=0.2.1",
- "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@v0.7.0"
+ "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@47f8c67edd60eacd8f2fa47d86415120fbc4a73b"
   ]
 jupyter = ["jupyter-events"]
 gpu-action = []
@@ -54,7 +54,7 @@ extra-index-url = [
 prerelease = "explicit"
 constraint-dependencies = ["flatdict>=4.1.0"]
 override-dependencies = [
-  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@v0.7.0",
+  "nomad-simulations @ git+https://github.com/nomad-coe/nomad-simulations.git@47f8c67edd60eacd8f2fa47d86415120fbc4a73b",
   # nomad 1.4.2 expects optimade's old API: ENTRY_COLLECTIONS in routers/__init__,
   # module-level structures_coll, add_major_version_base_url in main.py, and a logger
   # module that only exports LOGGER (no get_logger/create_logger). optimade 1.3+ restructured
