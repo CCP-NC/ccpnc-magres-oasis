@@ -16,7 +16,7 @@ prerelease-mode = "explicit"
 [manifest]
 constraints = [{ name = "flatdict", specifier = ">=4.1.0" }]
 overrides = [
-    { name = "nomad-simulations", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=v0.7.0" },
+    { name = "nomad-simulations", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=47f8c67edd60eacd8f2fa47d86415120fbc4a73b" },
     { name = "optimade", specifier = "==1.2.4" },
     { name = "starlette", specifier = ">=1.0" },
 ]
@@ -2680,7 +2680,7 @@ requires-dist = [
     { name = "nomad-parser-plugins-atomistic", specifier = ">=1.0.6" },
     { name = "nomad-parser-plugins-electronic", specifier = ">=1.0" },
     { name = "nomad-schema-plugin-run", specifier = ">=1.0.1" },
-    { name = "nomad-simulations", marker = "extra == 'plugins'", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=v0.7.0" },
+    { name = "nomad-simulations", marker = "extra == 'plugins'", git = "https://github.com/nomad-coe/nomad-simulations.git?rev=47f8c67edd60eacd8f2fa47d86415120fbc4a73b" },
 ]
 provides-extras = ["plugins", "jupyter", "gpu-action", "cpu-action", "dev"]
 
@@ -2931,11 +2931,13 @@ wheels = [
 
 [[package]]
 name = "nomad-simulations"
-version = "0.7.0"
-source = { git = "https://github.com/nomad-coe/nomad-simulations.git?rev=v0.7.0#d8f01a80f8857eb3a9be85377f0caffc3fbd0fec" }
+version = "0.7.1.dev21+g47f8c67ed"
+source = { git = "https://github.com/nomad-coe/nomad-simulations.git?rev=47f8c67edd60eacd8f2fa47d86415120fbc4a73b#47f8c67edd60eacd8f2fa47d86415120fbc4a73b" }
 dependencies = [
     { name = "matid" },
     { name = "nomad-lab", extra = ["infrastructure"] },
+    { name = "seekpath" },
+    { name = "spglib" },
 ]
 
 [[package]]
@@ -4751,6 +4753,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fd/c2/e276a237acb09824822b0ada11b028ed4067fdc367a946730979feacb870/scipy-1.16.2-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:b0348d8ddb55be2a844c518cd8cc8deeeb8aeba707cf834db5758fc89b476a2c", size = 38790088, upload-time = "2025-09-11T17:44:53.011Z" },
     { url = "https://files.pythonhosted.org/packages/c6/b4/5c18a766e8353015439f3780f5fc473f36f9762edc1a2e45da3ff5a31b21/scipy-1.16.2-cp314-cp314t-win_amd64.whl", hash = "sha256:26284797e38b8a75e14ea6631d29bda11e76ceaa6ddb6fdebbfe4c4d90faf2f9", size = 39457455, upload-time = "2025-09-11T17:44:58.899Z" },
     { url = "https://files.pythonhosted.org/packages/97/30/2f9a5243008f76dfc5dee9a53dfb939d9b31e16ce4bd4f2e628bfc5d89d2/scipy-1.16.2-cp314-cp314t-win_arm64.whl", hash = "sha256:d2a4472c231328d4de38d5f1f68fdd6d28a615138f842580a8a321b5845cf779", size = 26448374, upload-time = "2025-09-11T17:45:03.45Z" },
+]
+
+[[package]]
+name = "seekpath"
+version = "2.2.1"
+source = { registry = "https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "spglib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ee/17/e02d23a1d6806258e0543a2e738808faa2487ac5750c0771224202ca2011/seekpath-2.2.1.tar.gz", hash = "sha256:10906f13e3db5ed511b85ada2c0eba9f90ae764078a21809035561b0116a66a3", size = 44574, upload-time = "2026-01-31T13:01:30.004Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/73/24/0c2ade7551649491b775030799d3cb1283e96699d74704686dd4d4ab5ae2/seekpath-2.2.1-py3-none-any.whl", hash = "sha256:6351c89dd0f58d5d85dba2d63134cd036d57c777baf2bfb9b5b70ff84fa9b8c1", size = 77950, upload-time = "2026-01-31T13:01:28.161Z" },
 ]
 
 [[package]]
