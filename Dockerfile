@@ -89,8 +89,126 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --extra plugins
 
+# TEMPORARY: nomad-lab's suggestion-indexing code silently drops autocomplete
+# data for any quantity reached through a reference field (authors.name,
+# datasets.dataset_name, writers.name, viewers.name, main_author.name) -
+# section.m_path() reports the referenced object's own path instead of the
+# path it was reached through, so the suggestion value gets written to a
+# bogus top-level key instead of nested where Elasticsearch expects it.
+# Reported upstream: <link to Discord post / issue once filed>
+# Remove this once nomad-lab ships a fix.
+RUN python3 <<'PY'
+import pathlib, sysconfig
+
+target = pathlib.Path(sysconfig.get_paths()['purelib']) / 'nomad/metainfo/elasticsearch_extension.py'
+
+original = "                        section_path = section.m_path()[len(root.m_path()) :]\n"
+patch = (
+    original
+    + "                        if not section_path or section_path == '/':\n"
+    + "                            path_parts = path.rsplit('/', 1)\n"
+    + "                            if len(path_parts) == 2 and path_parts[1] == quantity.name:\n"
+    + "                                section_path = path_parts[0]\n"
+    + "                            else:\n"
+    + "                                section_path = path\n"
+)
+
+text = target.read_text()
+count = text.count(original)
+assert count == 1, (
+    f"Expected exactly 1 occurrence of the target line in {target}, found {count}. "
+    "nomad-lab's elasticsearch_extension.py has likely changed - update or drop this patch."
+)
+target.write_text(text.replace(original, patch, 1))
+print(f"Patched {target}")
+PY
+
 
 COPY scripts ./scripts
+
+FROM builder AS gui_builder
+
+WORKDIR /app
+
+# TEMPORARY: nomad-lab ships a pre-built GUI bundle inside its PyPI wheel
+# (see MANIFEST.in: `graft nomad/app/static`) with no source to patch in
+# place. This rebuilds the GUI from nomad-FAIR source, at the tag matching
+# the nomad-lab version this image installs, with our own app's menu wired
+# in as the shared default search context (used by the dataset view, the
+# upload management page, section-picker dialogs, the saved-query editor,
+# and the sample history card - none of these are app-aware in nomad-lab
+# today, they all hardcode the generic "Entries" menu otherwise).
+# Remove this once nomad-lab supports per-app context for these pages.
+RUN apt-get update \
+ && apt-get install --yes --quiet --no-install-recommends \
+      nodejs \
+      npm \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    set -ex && \
+    NOMAD_VERSION=$(python3 -c "import importlib.metadata; print(importlib.metadata.version('nomad-lab'))") && \
+    NOMAD_TAG="v$(echo "$NOMAD_VERSION" | sed -E 's/^([0-9]+\.[0-9]+\.[0-9]+).*/\1/')" && \
+    echo "Building GUI from nomad-FAIR tag: $NOMAD_TAG (nomad-lab version: $NOMAD_VERSION)" && \
+    git clone --depth 1 --branch "$NOMAD_TAG" --filter=blob:none --sparse \
+        https://gitlab.mpcdf.mpg.de/nomad-lab/nomad-FAIR.git gui-src && \
+    git -C gui-src sparse-checkout set gui
+
+RUN python3 <<'PY'
+import json, pathlib
+from nomad.cli import cli  # trigger plugin bootstrap
+import ccpnc_oasis_app.apps as m
+
+d = m.app_entry_point.app.model_dump(mode='json', exclude_none=True)
+# UserdataPage.js and SectionSelectDialog.js mutate context.search_syntaxes.exclude
+# directly and assume it's a non-null object; our app config never sets it.
+d.setdefault('search_syntaxes', {})
+
+target = pathlib.Path('gui-src/gui/src/defaultApp.js')
+with target.open('w') as f:
+    f.write('export const defaultApp = ')
+    json.dump(d, f, indent=2)
+    f.write('\n')
+print(f'Patched {target}')
+PY
+
+# TEMPORARY (paired with Patch 3 below): nomad-lab's entry overview page
+# unconditionally shows every entry's root section in the "sections" card,
+# with no config-level way to show it only for entries that actually need it
+# (like our ELN metadata entries, which need it for their editable form and
+# Synchronize button) while suppressing it for others (like our NMR
+# simulation entries, where it just dumps raw internal fields). Gate it on
+# the explicit overview=True ELN annotation instead - see Patch 3 for the
+# corresponding schema-side flag.
+RUN python3 <<'PY'
+import pathlib
+
+target = pathlib.Path('gui-src/gui/src/components/entry/OverviewView.js')
+
+original = "        if (path === 'data' || sectionDef.m_annotations?.eln?.[0]?.overview) {\n"
+patch = (
+    "        // CCPNC: only explicitly-flagged sections render here (see\n"
+    "        // CCPNCMetadataELN.m_def's overview=True annotation) - this used\n"
+    "        // to unconditionally include every entry's root section too.\n"
+    "        if (sectionDef.m_annotations?.eln?.[0]?.overview) {\n"
+)
+
+text = target.read_text()
+count = text.count(original)
+assert count == 1, (
+    f"Expected exactly 1 occurrence of the target line in {target}, found {count}. "
+    "nomad-lab's OverviewView.js has likely changed - update or drop this patch."
+)
+target.write_text(text.replace(original, patch, 1))
+print(f"Patched {target}")
+PY
+
+RUN cd gui-src/gui \
+ && npm install -g yarn \
+ && yarn install --frozen-lockfile \
+ && NODE_OPTIONS=--openssl-legacy-provider CI=true REACT_APP_BACKEND_URL=/nomad-oasis yarn build
 
 FROM builder AS docs
 
@@ -136,6 +254,7 @@ COPY --chown=nomad:${UID} --from=builder /opt/venv /opt/venv
 COPY configs/nomad.yaml nomad.yaml
 COPY pyproject.toml uv.lock /opt/
 COPY --chown=nomad:${UID} --from=docs /app/built_docs /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/app/static/docs
+COPY --chown=nomad:${UID} --from=gui_builder /app/gui-src/gui/build /opt/venv/lib/python${PYTHON_VERSION}/site-packages/nomad/app/static/gui
 
 RUN mkdir -p /app/.volumes/fs \
  && chown -R nomad:${UID} /app \
