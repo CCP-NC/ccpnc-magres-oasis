@@ -205,6 +205,34 @@ target.write_text(text.replace(original, patch, 1))
 print(f"Patched {target}")
 PY
 
+# TEMPORARY: nomad-lab's EntryDownloadButton builds its download URL by
+# interpolating JSON.stringify(query) directly into the URL with no
+# encodeURIComponent. The browser auto-encodes characters that are outright
+# invalid in a URL, but leaves "&" alone (it's a valid query-string
+# delimiter) - so any query value containing a literal "&" (e.g. a chemical
+# or author name) truncates json_query mid-string, and the backend's
+# json.loads rejects it with "cannot parse json_query". Affects both the
+# search results bulk-download button and the uploads processing table's
+# per-entry download menu (both use this component).
+# Remove this once nomad-lab ships a fix.
+RUN python3 <<'PY'
+import pathlib
+
+target = pathlib.Path('gui-src/gui/src/components/entry/EntryDownloadButton.js')
+
+original = "    const url = `${apiBase}/v1/entries/${urlSuffix}?owner=${owner}&json_query=${JSON.stringify(queryStringData)}`\n"
+patch = "    const url = `${apiBase}/v1/entries/${urlSuffix}?owner=${encodeURIComponent(owner)}&json_query=${encodeURIComponent(JSON.stringify(queryStringData))}`\n"
+
+text = target.read_text()
+count = text.count(original)
+assert count == 1, (
+    f"Expected exactly 1 occurrence of the target line in {target}, found {count}. "
+    "nomad-lab's EntryDownloadButton.js has likely changed - update or drop this patch."
+)
+target.write_text(text.replace(original, patch, 1))
+print(f"Patched {target}")
+PY
+
 RUN cd gui-src/gui \
  && npm install -g yarn \
  && yarn install --frozen-lockfile \
